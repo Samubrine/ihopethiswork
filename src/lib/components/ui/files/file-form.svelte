@@ -26,7 +26,6 @@
 
     const form = superForm(dataForm, {
         validators: zodClient(fileSchema),
-        SPA: true,
         onUpdate: ({ form: f }) => {
         if (f.valid) {
             toast.success(`Berhasil menambahkan. ${JSON.stringify(f.data, null, 2)}`);
@@ -51,7 +50,10 @@
 		} else if (announcementPressed) {
 			$formData.type = "pengumuman";
 		} else {
-			$formData.type = undefined;
+			// Default to "fail" if nothing is selected to ensure it's never undefined
+			// as the schema requires a value.
+			filePressed = true; // Visually re-select the "File" toggle
+			$formData.type = "fail";
 		}
 	}
 </script>
@@ -64,7 +66,7 @@
             <Form.Label>Jenis Fail*</Form.Label>
                 <div class="flex gap-2 mt-2">
                     <Toggle
-                        {...props}
+                        aria-label="Jenis Fail: File"
                         pressed={filePressed}
                         onPressedChange={(v) => {
                             filePressed = v;
@@ -75,7 +77,7 @@
                         File
                     </Toggle>
                     <Toggle
-                        {...props}
+                        aria-label="Jenis Fail: Pengumuman"
                         pressed={announcementPressed}
                         onPressedChange={(v) => {
                             announcementPressed = v;
